@@ -45,6 +45,7 @@ function initializeQuiz() {
 
     questionsAndAnswers.push(quizQAs);
 
+    document.getElementById("question").textContent = questionsAndAnswers[0].question;
 }
 
 initializeQuiz();

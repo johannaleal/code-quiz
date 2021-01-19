@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color:darkcyan;
+}
+
+/* Header styling */
+header {
+    padding: 20px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: lightskyblue;
+    color: darkblue;
+}
+
+header h1 {
+    display: inline-block;
+    font-size: 36px;
+    text-align: center;
+}
+
+header h3 {
+    display: inline-block;
+    font-size: 24px;
+}
