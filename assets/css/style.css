@@ -4,6 +4,7 @@
     margin: 0;
 }
 
+/* Body styling */
 body {
     background-color:darkcyan;
 }
@@ -16,13 +17,29 @@ header {
     color: darkblue;
 }
 
-header h1 {
-    display: inline-block;
-    font-size: 36px;
-    text-align: center;
-}
-
 header h3 {
     display: inline-block;
     font-size: 24px;
+}
+
+.container p {
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Styling for the buttons */
+#start-quiz {
+    width: 150px;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 20px;
+    color: white;
+    background-color: tomato;
+    border-radius: 10px;     /* Rounds the corners of the button */
+}
+
+#btnColumn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
