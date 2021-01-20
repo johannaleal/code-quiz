@@ -6,12 +6,16 @@ var answersDiv = document.getElementById("answers");
 var questionsAndAnswers = [];
 
 btnStartQuiz.addEventListener("click", function() {
-    // If the Start Quiz button was clicked, initialize the 
-    // quiz questions and answers object array
+    // If the Start Quiz button was clicked do the following:
+    
+    // Set the timer.
+    setTimer();
+
+    // Initialize the quiz questions and answers object array.
     initializeQuestionAndAnswerArray();
 
-    // Add answer rows to answers column.
-    //addAnswerRows();
+    // Remove the Start Quiz button.
+    btnStartQuiz.remove();
 
     // Display the first question and related answers.
     displayQandA(0);
@@ -62,6 +66,10 @@ function initializeQuestionAndAnswerArray() {
         "answer4": "alertBox('Hello World');",
         correctAnswer: 3
     });
+}
+
+function setTimer() {
+
 }
 
 function displayQandA(questionNumber) {
