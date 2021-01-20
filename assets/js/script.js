@@ -12,6 +12,15 @@ var correctAnswer = 0;
 // Total score
 var score = 0;
 
+// Get the timer element
+var timerElement = document.querySelector("#timer");
+
+// Initialize time remaining.
+var timeLeft = 75;
+
+// Flag telling us quiz ended.
+var quizEnded = false;
+
 // Store Start Quiz button object.
 var btnStartQuiz = document.getElementById("start-quiz-btn");
 
@@ -34,11 +43,23 @@ answersDiv.addEventListener("click", function(event) {
         }
         else {
             document.getElementById("message").innerText = "Wrong!";
+
+            // When the user answers incorrectly, penalize by reducing
+            // timer by 10 seconds.
+            timeLeft = timeLeft - 10;
+            timerElement.innerHTML = timeLeft;
+            console.log(timeLeft);
         }
 
         // Display the next question.
         currentQuestion++;
-        displayQandA(currentQuestion);
+
+        if ( currentQuestion <= 4 ) {
+            displayQandA(currentQuestion);
+        }
+        else {            
+            quizEnded == true;
+        };
     };
 });
 
@@ -46,7 +67,7 @@ btnStartQuiz.addEventListener("click", function() {
     // If the Start Quiz button was clicked do the following:
     
     // Set the timer.
-    setTimer();
+    startTimer();
 
     // Initialize the quiz questions and answers object array.
     initializeQuestionAndAnswerArray();
@@ -63,7 +84,7 @@ btnStartQuiz.addEventListener("click", function() {
 
 });
 
-// initializeQuestionAndAnswerArray initializes a global array of objects that contains each question, 
+// This function initializes a global array of objects that contains each question, 
 // its related answers, and the correct answer number.
 function initializeQuestionAndAnswerArray() {
     // Add question 1, answer set, and correct answer to the global array
@@ -109,16 +130,28 @@ function initializeQuestionAndAnswerArray() {
     });
 };
 
-function setTimer() {
+var startTimer = function() {
+    var timeInterval = setInterval(function() {
 
-};
+        if ( quizEnded == false ) {
+            timerElement.innerHTML = timeLeft;
+            timeLeft--;
+        }
+        else {
+            timerElement.innerHTML = "";
+            clearInterval(timeInterval);
+        };
+
+    }, 1000);
+
+    if ( quizEnded == true ) {
+        timerElement.innerHTML = timeLeft;
+    };
+}
 
 // This function will display the question and related answers using the the question
 // number passed in as a parameter.
 function displayQandA(questionNumber) {
-    // Clear any messages from previous question.
-    //document.getElementById("message").innerText = "";
-
     // Get the question from the question and answer array amd display it in the question div.
     document.getElementById("question").innerText = questionsAndAnswers[questionNumber].question;
 
@@ -139,16 +172,6 @@ function getCorrectAnswer(answerNum) {
     return questionsAndAnswers[answerNum].correctAnswer;
 
 };
-
-// function checkForAnswerClicked() {
-//     answersDiv.addEventListener("click", function(event) {
-//         var element = event.target;
-
-//         if (element.matches("div")) {
-//             console.log(element.innerText);
-//         }
-//     });
-// }
 
 // function addAnswerRows() {
 
