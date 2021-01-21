@@ -1,8 +1,11 @@
 
 // Store DOM objects
-var timerElement = document.querySelector("#timer");            // timer div
-var btnStartQuiz = document.getElementById("start-quiz-btn");   // Start Quiz button
-var answersDiv = document.getElementById("answers");            // answers div
+var timerElement = document.querySelector("#timer");           // timer div
+var btnStartQuiz = document.getElementById("start-quiz-btn");  // Start Quiz button
+var questionSection = document.getElementById("question");     // question div
+var mainSection = document.getElementById("main-section");    // answers section
+var answersDiv = document.getElementById("answers");          // answers div
+var messageDiv = document.getElementById("message");          // message div
 
 // Initialize variables
 var questionsAndAnswers = [];   // Question and answers object array
@@ -62,17 +65,20 @@ function initializeQuestionAndAnswerArray() {
 function getCorrectAnswer(answerNum) {
 
     return questionsAndAnswers[answerNum].correctAnswer;
-
 }
 
 // This function will display the question and related answers using the the question
 // number passed in as a parameter.
 function displayQandA(questionNumber) {
+    console.log(questionNumber);
+
     // Get the question from the question and answer array amd display it in the question div.
     document.getElementById("question").innerText = questionsAndAnswers[questionNumber].question;
 
     // Display each answer for the question in the answers div.
-    for ( i = 1; i <= 4 ; i++ ) {
+    var i;
+
+    for (i = 1; i <= 4 ; i++) {
         document.getElementById("answer" + i.toString()).innerText = i.toString() + ". " + questionsAndAnswers[questionNumber]["answer" + i.toString()];
     };
 
@@ -93,10 +99,10 @@ answersDiv.addEventListener("click", function(event) {
     // If the user's selected answer matches the correct answer
     // for the question, display a message stating that they won.
     if (userAnswer === correctAnswer ) {
-      document.getElementById("message").innerText = "Correct!";
+      messageDiv.innerText = "Correct!";
     }
     else {
-      document.getElementById("message").innerText = "Wrong!";
+      messageDiv.innerText = "Wrong!";
 
       // When the user answers incorrectly, penalize by reducing
       // timer by 10 seconds.
@@ -107,9 +113,12 @@ answersDiv.addEventListener("click", function(event) {
     // Display the next question if there are any more questions left.
     currentQuestion++;
 
-    if ( currentQuestion <= 4 ) {
+    if ( currentQuestion < 4 ) {
       displayQandA(currentQuestion);
-    };
+    }
+    else {
+        displayFinalScoreSection();
+    }
 
     // FIX THIS.
     if (( timeLeft <= 0 ) || (currentQuestion > 4)) {            
@@ -117,6 +126,63 @@ answersDiv.addEventListener("click", function(event) {
     };
   };
 });
+
+function displayFinalScoreSection() {
+    // Initialize variables.
+    var childDiv;
+    var i = 1;
+    var newDiv;
+    var newAtt;
+
+    // Replace the question text with a message telling/
+    // the user that they are done.
+    questionSection.innerHTML = "";
+
+    // Clear the message div.
+    messageDiv.innerHTML = "";
+
+    // Remove all the answers from the page.
+    for (i = 1; i <= 4; i++) {
+        childDiv = document.getElementById("answer" + i.toString());
+        var removeDiv = answersDiv.removeChild(childDiv);
+    }
+
+    // Add a new div to display "All done!".
+    newDiv = document.createElement("div");
+    // Create a new class attribute for the div.
+    newAtt = document.createAttribute("class");
+    newAtt.value = "col-lg-6 big-message";
+    // Add the attribute to the div node and then append
+    // it to the section.
+    newDiv.setAttributeNode(newAtt);
+    newDiv.innerHTML = "All done!";
+    // Append the child node to the answers div.
+    answersDiv.appendChild(newDiv);
+
+     // Add a new div to prompt for their initials.
+     newDiv = document.createElement("div");
+     // Create a new class attribute for the div.
+     newAtt = document.createAttribute("class");
+     newAtt.value = "col-lg-6";
+     // Add the attribute to the div node and then append
+     // it to the section.
+     newDiv.setAttributeNode(newAtt);
+     newDiv.innerHTML = "Enter your initials:";
+     // Append the child node to the answers div.
+     answersDiv.appendChild(newDiv);
+
+     // Add an input element for their initials.
+     newDiv = document.createElement("input");
+     // Create a new class attribute for the div.
+    //  newAtt = document.createAttribute("class");
+    //  newAtt.value = "col-lg-6";
+    //  // Add the attribute to the div node and then append
+    //  // it to the section.
+    //  newDiv.setAttributeNode(newAtt);
+    //  newDiv.innerHTML = "Enter your initials:";
+     // Append the child node to the answers div.
+     answersDiv.appendChild(newDiv);
+}
 
 function startQuiz() {
   // Initialize the quiz questions and answers object array.
@@ -130,11 +196,15 @@ function startQuiz() {
 
   // Set timer interval.
   timeInterval = setInterval(function() {
+    // Decrement timer and display the new value.
     timeLeft--;
     timerElement.innerHTML = timeLeft;
     
+    // If the timer has run out, the game is over so
+    // display the score.
     if (timeLeft === 0) {
-        clearInterval(timeInterval);
+      clearInterval(timeInterval);
+      displayFinalScoreSection();
     }
   }, 1000);
 }
