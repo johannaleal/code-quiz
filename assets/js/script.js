@@ -14,6 +14,8 @@ var correctAnswer = 0;          // Correct answer of current question.
 var score = 0;                  // Total score
 var timeLeft = 76;              // Initialize time remaining.
 var quizEnded = false;          // Flag telling us quiz ended.
+var timerInterval;              // Timer interval
+var btnSubmitScore              // Submit score button
 
 // This function initializes a global array of objects that contains each question, 
 // its related answers, and the correct answer number.
@@ -70,8 +72,6 @@ function getCorrectAnswer(answerNum) {
 // This function will display the question and related answers using the the question
 // number passed in as a parameter.
 function displayQandA(questionNumber) {
-    console.log(questionNumber);
-
     // Get the question from the question and answer array amd display it in the question div.
     document.getElementById("question").innerText = questionsAndAnswers[questionNumber].question;
 
@@ -80,7 +80,7 @@ function displayQandA(questionNumber) {
 
     for (i = 1; i <= 4 ; i++) {
         document.getElementById("answer" + i.toString()).innerText = i.toString() + ". " + questionsAndAnswers[questionNumber]["answer" + i.toString()];
-    };
+    }
 
     // Get the correct answer number for this question and store it
     // in a global variable.
@@ -136,6 +136,9 @@ function displayFinalScoreSection(finalScore) {
     var initialsDiv;
     var newAtt;
 
+    // Stop the timer.
+    clearInterval(timerInterval);
+
     // Replace the question text with a message telling/
     // the user that they are done.
     questionSection.innerHTML = "";
@@ -173,7 +176,6 @@ function displayFinalScoreSection(finalScore) {
      newElement.innerHTML = "Your final score is: " + finalScore.toString();
      // Append the child node to the answers div.
      answersDiv.appendChild(newElement);
- 
 
      // ENTER INITIALS - Add a new div to prompt for their initials.
      initialsDiv = document.createElement("div");
@@ -211,6 +213,15 @@ function displayFinalScoreSection(finalScore) {
 
     // Append the button element as a child node to the initials div.
     initialsDiv.appendChild(newElement);
+
+    btnSubmitScore = document.getElementById("submit-btn"); 
+}
+// This will save the score entered in the input box after the
+//  Submit button is clicked on the final score page.
+function submitScore {
+  var element = event.target;
+  var userAnswer;
+
 }
 
 function startQuiz() {
@@ -224,7 +235,7 @@ function startQuiz() {
   displayQandA(currentQuestion);
 
   // Set timer interval.
-  timeInterval = setInterval(function() {
+  timerInterval = setInterval(function() {
     // Decrement timer and display the new value.
     timeLeft--;
     timerElement.innerHTML = timeLeft;
@@ -232,7 +243,7 @@ function startQuiz() {
     // If the timer has run out, the game is over so
     // display the score.
     if (timeLeft === 0) {
-      clearInterval(timeInterval);
+      clearInterval(timerInterval);
       displayFinalScoreSection();
     }
   }, 1000);
@@ -240,3 +251,5 @@ function startQuiz() {
 
 // If the Start Quiz button was clicked, start the quiz.
 btnStartQuiz.addEventListener("click", startQuiz);
+
+btnSubmitScore.addEventListener("click", submitScore);
