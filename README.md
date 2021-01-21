@@ -2,29 +2,37 @@
 
 ## Description
 
-In this project, I created a password generator. Once a user enters a password length and
-selects from several character types, a random password is generated. The functionality is as follows:
-
-* The user will click a button on a web page to generate a password.
-* The user will be prompted to enter a password length between 8 and 128.
+In this project, I created a JavaScript quiz Web page that allows a user to answer four different
+code-related questions. After answering four questions, the player is given the option of saving their initials along with their score. The player will then be presented with a list of high scores and initials.
 
 ## Installation
 
 This project requires the following files and folders:
 
 * index.html
-* script.js
-* assets folder
-* assets/style.css
+* assests/js/script.js
+* assets/css/style.css
 
 ## Deployed Website
 
-![Code Quiz Website](https://johannaleal.github.io/code-refactor)
+[Code Quiz Website](https://johannaleal.github.io/code-quiz/)
+
+## Repository
+
+[Repository](https://github.com/johannaleal/code-quiz)
 
 ## Index.html Screenshot
 
-![Github Logo](/assets/images/main-page.png)
+![Main Quiz Code Page](assets/images/main.png)
 
-## Enter Password Length Prompt
+## Question and Answers Page
 
-![Github Logo](/assets/images/enter-pwd-length.PNG)
+![Question and Answers Page](assets/images/question.png)
+
+## Wrong Answer
+
+![Question and Answers Page](assets/images/wrong-answer.png)
+
+## All Done Page
+
+![Question and Answers Page](assets/images/done-page.png)
