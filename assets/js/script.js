@@ -16,7 +16,7 @@ var timeLeft = 76;              // Initialize time remaining.
 var quizEnded = false;          // Flag telling us quiz ended.
 var timerInterval;              // Timer interval
 var btnSubmitScore              // Submit score button
-var savedScores = [];            // Saved scores array
+var savedScores = []            // Array to save initials and scores
 
 // This function initializes a global array of objects that contains each question, 
 // its related answers, and the correct answer number.
@@ -121,12 +121,7 @@ answersDiv.addEventListener("click", function(event) {
       score = timeLeft;
       displayFinalScoreSection(score);
     }
-
-    // FIX THIS.
-    if (( timeLeft <= 0 ) || (currentQuestion > 4)) {            
-      quizEnded == true;
-    };
-  };
+  }
 });
 
 function displayFinalScoreSection() {
@@ -231,19 +226,26 @@ function displayFinalScoreSection() {
 //  Submit button is clicked on the final score page.
 function submitScore() {
   // Get the value entered in the initials input box.
-  var initials = document.getElementById("user-initials").value;
+  var userInits = document.getElementById("user-initials").value;
   
   // Initials are required. Display an error message if they
   // were not entered.
-  if (initials ==  "") {
+  if (userInits ==  "") {
     alert("Initials must be entered in order to save them.");
   }
   // Save the score.
   else {
-    // Save the latest score to the scores array.
-    savedScores.push(score);
-    localStorage.setItem("savedScores", JSON.stringify(savedScores));
+    // Save the latest score and initials to the scores array.
+    var currentScore = {
+      initials: userInits,
+      score: score
+    }
 
+    // Save current initials and score to global array.
+    savedScores.push(currentScore);
+
+    // Save the array in local storage for later display.
+    localStorage.setItem("savedScores", JSON.stringify(savedScores));
   }
 
 }
