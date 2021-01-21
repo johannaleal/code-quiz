@@ -16,6 +16,7 @@ var timeLeft = 76;              // Initialize time remaining.
 var quizEnded = false;          // Flag telling us quiz ended.
 var timerInterval;              // Timer interval
 var btnSubmitScore              // Submit score button
+var savedScores = [];            // Saved scores array
 
 // This function initializes a global array of objects that contains each question, 
 // its related answers, and the correct answer number.
@@ -128,7 +129,7 @@ answersDiv.addEventListener("click", function(event) {
   };
 });
 
-function displayFinalScoreSection(finalScore) {
+function displayFinalScoreSection() {
     // Initialize variables.
     var childDiv;
     var i = 1;
@@ -173,7 +174,7 @@ function displayFinalScoreSection(finalScore) {
      // Add the attribute to the div node and then append
      // it to the section.
      newElement.setAttributeNode(newAtt);
-     newElement.innerHTML = "Your final score is: " + finalScore.toString();
+     newElement.innerHTML = "Your final score is: " + score.toString();
      // Append the child node to the answers div.
      answersDiv.appendChild(newElement);
 
@@ -196,9 +197,14 @@ function displayFinalScoreSection(finalScore) {
      newAtt.value = "5";
     // Add the attribute to the input node.
     newElement.setAttributeNode(newAtt);
+    // Create a name attribute for the input element.
+    newAtt = document.createAttribute("id");
+    newAtt.value = "user-initials";
+    // Add the attribute to the input node.
+    newElement.setAttributeNode(newAtt);
     
-     // Append the input element as a child node to the initials div.
-     initialsDiv.appendChild(newElement);
+    // Append the input element as a child node to the initials div.
+    initialsDiv.appendChild(newElement);
 
     // BUTTON - Add a button element to save the initials
     // entered
@@ -208,19 +214,37 @@ function displayFinalScoreSection(finalScore) {
     newAtt.value = "submit-btn";
     // Add the attribute to the button node.
     newElement.setAttributeNode(newAtt);
-
+    // Add text to button
     newElement.innerHTML = "Submit";
 
     // Append the button element as a child node to the initials div.
     initialsDiv.appendChild(newElement);
 
-    btnSubmitScore = document.getElementById("submit-btn"); 
+    // Get the Submit Score button object.
+    btnSubmitScore = document.getElementById("submit-btn");
+    // Add an event listener if it is clicked. If it is
+    // clicked then run the submitScore function.
+    btnSubmitScore.addEventListener("click", submitScore);
 }
+
 // This will save the score entered in the input box after the
 //  Submit button is clicked on the final score page.
-function submitScore {
-  var element = event.target;
-  var userAnswer;
+function submitScore() {
+  // Get the value entered in the initials input box.
+  var initials = document.getElementById("user-initials").value;
+  
+  // Initials are required. Display an error message if they
+  // were not entered.
+  if (initials ==  "") {
+    alert("Initials must be entered in order to save them.");
+  }
+  // Save the score.
+  else {
+    // Save the latest score to the scores array.
+    savedScores.push(score);
+    localStorage.setItem("savedScores", JSON.stringify(savedScores));
+
+  }
 
 }
 
@@ -251,5 +275,3 @@ function startQuiz() {
 
 // If the Start Quiz button was clicked, start the quiz.
 btnStartQuiz.addEventListener("click", startQuiz);
-
-btnSubmitScore.addEventListener("click", submitScore);
