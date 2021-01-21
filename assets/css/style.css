@@ -43,7 +43,9 @@ header h3 {
 }
 
 /* Styling for the buttons */
-#start-quiz-btn {
+#start-quiz-btn, 
+#submit-btn
+{
     width: 150px;
     text-align: center;
     font-weight: bold;
@@ -51,6 +53,12 @@ header h3 {
     color: white;
     background-color: tomato;
     border-radius: 10px;     /* Rounds the corners of the button */
+}
+
+#submit-btn {
+    width: 90px;
+    height: 45px;
+    padding: 10px;
 }
 
 #btnColumn {

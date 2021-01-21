@@ -117,7 +117,8 @@ answersDiv.addEventListener("click", function(event) {
       displayQandA(currentQuestion);
     }
     else {
-        displayFinalScoreSection();
+      score = timeLeft;
+      displayFinalScoreSection(score);
     }
 
     // FIX THIS.
@@ -127,11 +128,12 @@ answersDiv.addEventListener("click", function(event) {
   };
 });
 
-function displayFinalScoreSection() {
+function displayFinalScoreSection(finalScore) {
     // Initialize variables.
     var childDiv;
     var i = 1;
-    var newDiv;
+    var newElement;
+    var initialsDiv;
     var newAtt;
 
     // Replace the question text with a message telling/
@@ -147,41 +149,68 @@ function displayFinalScoreSection() {
         var removeDiv = answersDiv.removeChild(childDiv);
     }
 
-    // Add a new div to display "All done!".
-    newDiv = document.createElement("div");
-    // Create a new class attribute for the div.
+    // ALL DONE! - Add a new div to display "All done!".
+    newElement = document.createElement("div");
+    // Create a class attribute for the div.
     newAtt = document.createAttribute("class");
-    newAtt.value = "col-lg-6 big-message";
+    newAtt.value = "col-lg-12 big-message";
     // Add the attribute to the div node and then append
     // it to the section.
-    newDiv.setAttributeNode(newAtt);
-    newDiv.innerHTML = "All done!";
+    newElement.setAttributeNode(newAtt);
+    newElement.innerHTML = "All done!";
     // Append the child node to the answers div.
-    answersDiv.appendChild(newDiv);
+    answersDiv.appendChild(newElement);
 
-     // Add a new div to prompt for their initials.
-     newDiv = document.createElement("div");
-     // Create a new class attribute for the div.
+     // YOUR FINAL SCORE - Add a new div to display the 
+     // user's final score.
+     newElement = document.createElement("div");
+     // Create a class attribute for the div.
      newAtt = document.createAttribute("class");
-     newAtt.value = "col-lg-6";
+     newAtt.value = "col-lg-12";
      // Add the attribute to the div node and then append
      // it to the section.
-     newDiv.setAttributeNode(newAtt);
-     newDiv.innerHTML = "Enter your initials:";
+     newElement.setAttributeNode(newAtt);
+     newElement.innerHTML = "Your final score is: " + finalScore.toString();
      // Append the child node to the answers div.
-     answersDiv.appendChild(newDiv);
+     answersDiv.appendChild(newElement);
+ 
 
-     // Add an input element for their initials.
-     newDiv = document.createElement("input");
-     // Create a new class attribute for the div.
-    //  newAtt = document.createAttribute("class");
-    //  newAtt.value = "col-lg-6";
-    //  // Add the attribute to the div node and then append
-    //  // it to the section.
-    //  newDiv.setAttributeNode(newAtt);
-    //  newDiv.innerHTML = "Enter your initials:";
+     // ENTER INITIALS - Add a new div to prompt for their initials.
+     initialsDiv = document.createElement("div");
+     // Create a class attribute for the div.
+     newAtt = document.createAttribute("class");
+     newAtt.value = "col-lg-12";
+     // Add the attribute to the div node and then append
+     // it to the section.
+     initialsDiv.setAttributeNode(newAtt);
+     initialsDiv.innerHTML = "Enter your initials: ";
      // Append the child node to the answers div.
-     answersDiv.appendChild(newDiv);
+     answersDiv.appendChild(initialsDiv);
+
+     // INPUT - Add an input element for their initials.
+     newElement = document.createElement("input");
+     // Create a size attribute for the input element.
+     newAtt = document.createAttribute("size");
+     newAtt.value = "5";
+    // Add the attribute to the input node.
+    newElement.setAttributeNode(newAtt);
+    
+     // Append the input element as a child node to the initials div.
+     initialsDiv.appendChild(newElement);
+
+    // BUTTON - Add a button element to save the initials
+    // entered
+    newElement = document.createElement("button");
+    // Create an Id attribute for the button.
+    newAtt = document.createAttribute("id");
+    newAtt.value = "submit-btn";
+    // Add the attribute to the button node.
+    newElement.setAttributeNode(newAtt);
+
+    newElement.innerHTML = "Submit";
+
+    // Append the button element as a child node to the initials div.
+    initialsDiv.appendChild(newElement);
 }
 
 function startQuiz() {
