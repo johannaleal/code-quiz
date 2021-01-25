@@ -18,7 +18,6 @@ var timerInterval;              // Timer interval
 var btnSubmitScore;             // Submit score button
 var btnClearScores;             // Clear scores button
 var savedScores = [];           // Array to save high score objects
-var savedData = false;          // Boolean to tell whether there is saved data in local storage
 
 // This function initializes a global array of objects that contains each question, 
 // its related answers, and the correct answer number.
@@ -26,10 +25,10 @@ function initializeQuestionAndAnswerArray() {
     // Add question 1, answer set, and correct answer to the global array
     questionsAndAnswers = [{
         question: "Inside which HTML element do we put the JavaScript?",
-        "answer1": "<javascript>",
-        "answer2": "<js>",
-        "answer3": "<scripting>",
-        "answer4": "<script>",
+        "answer1": "&lt;javascript&gt;",
+        "answer2": "&lt;js&gt;",
+        "answer3": "&lt;scripting&gt;",
+        "answer4": "&lt;script&gt;",
         correctAnswer: 4
       }   
     ];
@@ -37,20 +36,20 @@ function initializeQuestionAndAnswerArray() {
     // Add question 2, answer set, and correct answer to the global array
     questionsAndAnswers.push({
         question: "What is the correct place to insert a JavaScript?",
-        "answer1": "The <body> section",
-        "answer2": "The <head> section",
-        "answer3": "The <inner> section",
-        "answer4": "Both the <head> and the <body> section",
+        "answer1": "The &lt;body&gt; section",
+        "answer2": "The &lt;head&gt; section",
+        "answer3": "The &lt;inner&gt; section",
+        "answer4": "Both the &lt;head&gt; and the <body> section",
         correctAnswer: 1
     });
 
     // Add question 3, answer set, and correct answer to the global array
     questionsAndAnswers.push({
         question: "What is the correct syntax for referring to an external script called xxx.js?",
-        "answer1": "<script name='xxx.js'",
-        "answer2": "<script href='xxx.js'",
-        "answer3": "<script src='xxx.js'",
-        "answer4": "<script alt='xxx.js'",
+        "answer1": "&lt;script name='xxx.js'",
+        "answer2": "&lt;script href='xxx.js'",
+        "answer3": "&lt;script src='xxx.js'",
+        "answer4": "&lt;script alt='xxx.js'",
         correctAnswer: 3
     });
 
@@ -75,14 +74,41 @@ function getCorrectAnswer(answerNum) {
 // This function will display the question and related answers using the the question
 // number passed in as a parameter.
 function displayQandA(questionNumber) {
+    // Get DOM elements to process question and answers.
+    var answersDiv = document.getElementById("answers");
+
     // Get the question from the question and answer array amd display it in the question div.
     document.getElementById("question").innerText = questionsAndAnswers[questionNumber].question;
 
     // Display each answer for the question in the answers div.
-    var i;
+    for (var i = 1; i <= 4 ; i++) {
+        //document.getElementById("answer" + i.toString()).innerText = i.toString() + ". " + questionsAndAnswers[questionNumber]["answer" + i.toString()];
 
-    for (i = 1; i <= 4 ; i++) {
-        document.getElementById("answer" + i.toString()).innerText = i.toString() + ". " + questionsAndAnswers[questionNumber]["answer" + i.toString()];
+        // Only create the HTML elements if this is the first question.
+        // Otherwise just replace the inner HTML.
+        if (questionNumber === 0) {
+          var newElement = document.createElement("div");
+
+          // Set the attributes for each answer div.
+          var newAtt = document.createAttribute("class");
+          newAtt.value = "col-lg-12";
+          newElement.setAttributeNode(newAtt);
+          newAtt = document.createAttribute("id");
+          newAtt.value = "answer" + i.toString();
+          newElement.setAttributeNode(newAtt);
+          newAtt = document.createAttribute("data-number");
+          newAtt.value = i.toString();
+          newElement.setAttributeNode(newAtt);
+        }
+        else {
+          var newElement = document.getElementById("answer" + i);
+        };
+
+        // Get the answer text from the questions and answer array.
+        newElement.innerHTML = i.toString() + ". " + questionsAndAnswers[questionNumber]["answer" + i];
+
+        // Append this div to the answers div.
+        answersDiv.appendChild(newElement);
     }
 
     // Get the correct answer number for this question and store it
@@ -149,7 +175,8 @@ function displayFinalScoreSection() {
     // Remove all the answers from the page.
     for (i = 1; i <= 4; i++) {
         childDiv = document.getElementById("answer" + i.toString());
-        var removeDiv = answersDiv.removeChild(childDiv);
+        console.log("i is " + i);
+        answersDiv.removeChild(childDiv);
     }
 
     // ALL DONE! - Add a new div to display "All done!".
@@ -162,7 +189,7 @@ function displayFinalScoreSection() {
     newAtt.value = "col-lg-12 big-message";
     newElement.setAttributeNode(newAtt);
 
-    // Add an h3 element so the text apears larger.
+    // Add an h3 element so the text appears larger.
     // Create an Id attribute for it, give it a value, 
     // and add the attribute to the h3 node.
     var subHdrElement = document.createElement("h3");
@@ -311,29 +338,31 @@ function displayHighScoresSection() {
     deleteElement.remove();
   };
 
-  // FInd the sub-section-header element and modify the 
+  // Find the sub-section-header element and modify the 
   // inner HTML for the High Scores page.
   subSectionDiv = document.getElementById("sub-section-header");
   subSectionDiv.textContent = "High Scores";
   subSectionDiv.setAttribute("style", "text-align: center");
+
+   // Create a new section for the high scores list, 
+  // set an Id for it, and append it to the answers div.
+  var highScoresSection = document.createElement("section");
+  newAtt = document.createAttribute("id");
+  newAtt.value = "high-scores-section";
+  highScoresSection.setAttributeNode(newAtt);
+  answersDiv.appendChild(highScoresSection);
 
   // Create a new row div.
   var newRow = document.createElement("div");
   newAtt = document.createAttribute("class");
   newAtt.value = "row";
   newRow.setAttributeNode(newAtt);
+  newAtt = document.createAttribute("style");
+  newAtt.value = "background-color: lightskyblue;";
+  newRow.setAttributeNode(newAtt);
 
   // Append the child node to the answers div.
-  answersDiv.appendChild(newRow);
-
-  // // Create a new div element and a class attribute for it.
-  // newElement = document.createElement("div");
-  // newAtt = document.createAttribute("class");
-  // newAtt.value = "col-lg-2";
-  // newElement.setAttributeNode(newAtt);
-
-  // Append the child node to the answers div.
-  // newRow.appendChild(newElement);
+  highScoresSection.appendChild(newRow);
 
   // Create a new div for the high score place column.
   newElement = document.createElement("div");
@@ -364,11 +393,19 @@ function displayHighScoresSection() {
   // Append the child node to the row div.
   // Then append the div to the answers section.
   newRow.appendChild(newElement);
-  answersDiv.appendChild(newRow);
+  highScoresSection.appendChild(newRow);
 
   // Display the saved scores.
-  var totalScores = parseInt(savedScores.length);
+  var totalScores;
   
+  if (savedScores) {
+    // Get the total number of scores that are stored.
+    totalScores = parseInt(savedScores.length);
+    
+    // Sort the scores in descending order.
+    savedScores.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+  };
+
   // Display the scores and initials for 
   // the high scores page.
   for (var i = 0; i < totalScores; i++) {
@@ -381,14 +418,6 @@ function displayHighScoresSection() {
     rowBgColor = (rowBgColor === "lightgray" ? "white" : "lightgray");
     newAtt.value = "background-color:" + rowBgColor;
     newRow.setAttributeNode(newAtt);
-
-    // Create a new div element and a class attribute for it.
-    // Append it to the new row.
-    // newElement = document.createElement("div");
-    // newAtt = document.createAttribute("class");
-    // newAtt.value = "col-lg-2";
-    // newElement.setAttributeNode(newAtt);
-    // newRow.appendChild(newElement);
 
     // Create a new div for the high score order column.
     // Set the value to display and append it to the new row.
@@ -421,7 +450,7 @@ function displayHighScoresSection() {
     // Append the child node to the row div.
     // Then append the div to the answers section.
     newRow.appendChild(newElement);
-    answersDiv.appendChild(newRow);
+    highScoresSection.appendChild(newRow);
   };
 
   // BUTTON - Add a button element to clear the saved 
@@ -452,7 +481,8 @@ function displayHighScoresSection() {
   // Append the row to the answers div.
   newElement.appendChild(newBtn)
   newRow.appendChild(newElement);
-  answersDiv.appendChild(newRow);
+  highScoresSection.appendChild(newRow);
+  answersDiv.appendChild(highScoresSection);
 
   // Get the Clear Scores button object.
   btnClearScores = document.getElementById("clear-scores-btn");
@@ -465,8 +495,16 @@ function displayHighScoresSection() {
 function clearScores() {
   // If the Clear Scores button was clicked, clear the savedScores item
   // in local storage.
-  console.log("hello");
   localStorage.removeItem("savedScores");
+
+  // Clear the global saved scores arry.
+  savedScores = [];
+
+  var deleteElement = document.getElementById("high-scores-section");
+  if (deleteElement != null) {
+    deleteElement.remove();
+  };
+
   displayHighScoresSection();
 }
 
