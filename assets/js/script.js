@@ -11,12 +11,14 @@ var messageDiv = document.getElementById("message");          // message div
 var questionsAndAnswers = [];   // Question and answers object array
 var currentQuestion = 0;        // Set current question.
 var correctAnswer = 0;          // Correct answer of current question.
-var score = 0;                  // Total score
+var currentScore = 0;           // Current score
 var timeLeft = 76;              // Initialize time remaining.
 var quizEnded = false;          // Flag telling us quiz ended.
 var timerInterval;              // Timer interval
-var btnSubmitScore              // Submit score button
-var savedScores = []            // Array to save high score objects
+var btnSubmitScore;             // Submit score button
+var btnClearScores;             // Clear scores button
+var savedScores = [];           // Array to save high score objects
+var savedData = false;          // Boolean to tell whether there is saved data in local storage
 
 // This function initializes a global array of objects that contains each question, 
 // its related answers, and the correct answer number.
@@ -48,7 +50,7 @@ function initializeQuestionAndAnswerArray() {
         "answer1": "<script name='xxx.js'",
         "answer2": "<script href='xxx.js'",
         "answer3": "<script src='xxx.js'",
-        "answer4": ",script alt='xxx.js'",
+        "answer4": "<script alt='xxx.js'",
         correctAnswer: 3
     });
 
@@ -118,8 +120,8 @@ answersDiv.addEventListener("click", function(event) {
       displayQandA(currentQuestion);
     }
     else {
-      score = timeLeft;
-      displayFinalScoreSection(score);
+      currentScore = timeLeft;
+      displayFinalScoreSection(currentScore);
     }
   }
 });
@@ -185,7 +187,12 @@ function displayFinalScoreSection() {
     newAtt = document.createAttribute("class");
     newAtt.value = "col-lg-12";
     newElement.setAttributeNode(newAtt);
-    newElement.innerHTML = "Your final score is: " + score.toString();
+    newElement.innerHTML = "Your final score is: " + currentScore.toString();
+
+    // Set an Id attribute for this element.
+    newAtt = document.createAttribute("id");
+    newAtt.value = "final-score";
+    newElement.setAttributeNode(newAtt);
 
     // Append the child node to the answers div.
     answersDiv.appendChild(newElement);
@@ -200,6 +207,11 @@ function displayFinalScoreSection() {
     newAtt.value = "col-lg-12";
     initialsDiv.setAttributeNode(newAtt);
     initialsDiv.innerHTML = "Enter your initials: ";
+
+    // Set an Id attribute for this element.
+    newAtt = document.createAttribute("id");
+    newAtt.value = "enter-initials";
+    initialsDiv.setAttributeNode(newAtt);
 
     // Append the child node to the answers div.
     answersDiv.appendChild(initialsDiv);
@@ -260,21 +272,19 @@ function submitScore() {
   // Save the score.
   else {
     // Save the latest score and initials to the scores array.
-    var currentScore = {
-      initials: userInits,
-      score: score
-    }
+    var currentScoreObject = {initials: userInits.toUpperCase(), score: currentScore};
 
     // Save current initials and score to global array.
-    savedScores.push(currentScore);
-
+    savedScores = savedScores || [];
+    savedScores.push(currentScoreObject);
+   
     // Save the array in local storage for later display.
     localStorage.setItem("savedScores", JSON.stringify(savedScores));
+  };
 
     // Display a list of high scores. This page will be dynamically
     // created.
     displayHighScoresSection();
-  }
 }
 
 // This function will display the high scores page where user initials
@@ -284,7 +294,22 @@ function displayHighScoresSection() {
   var subSectionDiv;
   var newElement;
   var newAtt;
+  var rowBgColor = "lightgray";
   var i = 1;
+
+  // Get any saved scores from local storage.
+  savedScores = JSON.parse(localStorage.getItem("savedScores"));
+
+  // Remove final score div and the enter initials div.
+  var deleteElement = document.getElementById("final-score");
+  if (deleteElement != null) {
+    deleteElement.remove();
+  };
+
+  deleteElement = document.getElementById("enter-initials");
+  if (deleteElement != null) {
+    deleteElement.remove();
+  };
 
   // FInd the sub-section-header element and modify the 
   // inner HTML for the High Scores page.
@@ -292,86 +317,157 @@ function displayHighScoresSection() {
   subSectionDiv.textContent = "High Scores";
   subSectionDiv.setAttribute("style", "text-align: center");
 
-  // Replace the question text with a high score header.
-  //questionSection.innerHTML = "";
+  // Create a new row div.
+  var newRow = document.createElement("div");
+  newAtt = document.createAttribute("class");
+  newAtt.value = "row";
+  newRow.setAttributeNode(newAtt);
 
-  // // Remove all the answers from the page.
-  // for (i = 1; i <= 4; i++) {
-  //     childDiv = document.getElementById("answer" + i.toString());
-  //     var removeDiv = answersDiv.removeChild(childDiv);
-  // }
+  // Append the child node to the answers div.
+  answersDiv.appendChild(newRow);
 
-  // ALL DONE! - Add a new div to display "All done!".
+  // // Create a new div element and a class attribute for it.
   // newElement = document.createElement("div");
-  // // Create a class attribute for the div.
   // newAtt = document.createAttribute("class");
-  // newAtt.value = "col-lg-12 big-message";
-  // // Add the attribute to the div node and then append
-  // // it to the section.
+  // newAtt.value = "col-lg-2";
   // newElement.setAttributeNode(newAtt);
-  // newElement.innerHTML = "High Scores";
-  // // Append the child node to the answers div.
-  // answersDiv.appendChild(newElement);
 
-  // // YOUR FINAL SCORE - Add a new div to display the 
-  // // user's final score.
-  // newElement = document.createElement("div");
-  // // Create a class attribute for the div.
-  // newAtt = document.createAttribute("class");
-  // newAtt.value = "col-lg-12";
-  // // Add the attribute to the div node and then append
-  // // it to the section.
-  // newElement.setAttributeNode(newAtt);
-  // newElement.innerHTML = "Your final score is: " + score.toString();
-  // // Append the child node to the answers div.
-  // answersDiv.appendChild(newElement);
+  // Append the child node to the answers div.
+  // newRow.appendChild(newElement);
 
-  // // ENTER INITIALS - Add a new div to prompt for their initials.
-  // initialsDiv = document.createElement("div");
-  // // Create a class attribute for the div.
-  // newAtt = document.createAttribute("class");
-  // newAtt.value = "col-lg-12";
-  // // Add the attribute to the div node and then append
-  // // it to the section.
-  // initialsDiv.setAttributeNode(newAtt);
-  // initialsDiv.innerHTML = "Enter your initials: ";
-  // // Append the child node to the answers div.
-  // answersDiv.appendChild(initialsDiv);
+  // Create a new div for the high score place column.
+  newElement = document.createElement("div");
+  newAtt = document.createAttribute("class");
+  newAtt.value = "col-lg-2";
+  newElement.setAttributeNode(newAtt);
 
-  // // INPUT - Add an input element for their initials.
-  // newElement = document.createElement("input");
-  // // Create a size attribute for the input element.
-  // newAtt = document.createAttribute("size");
-  // newAtt.value = "5";
-  // // Add the attribute to the input node.
-  // newElement.setAttributeNode(newAtt);
-  // // Create a name attribute for the input element.
-  // newAtt = document.createAttribute("id");
-  // newAtt.value = "user-initials";
-  // // Add the attribute to the input node.
-  // newElement.setAttributeNode(newAtt);
+  // Append the child node to the answers div.
+  newRow.appendChild(newElement);
+
+  // Create a new div for the Score column
+  newElement = document.createElement("div");
+  newAtt = document.createAttribute("class");
+  newAtt.value = "col-lg-3";
+  newElement.setAttributeNode(newAtt);
+  newElement.innerHTML = "Score";
+
+  // Append the child node to the answers div.
+  newRow.appendChild(newElement);
+
+  // Create a new div for the Initials column
+  newElement = document.createElement("div");
+  newAtt = document.createAttribute("class");
+  newAtt.value = "col-lg-3";
+  newElement.setAttributeNode(newAtt);
+  newElement.innerHTML = "Initials";
+
+  // Append the child node to the row div.
+  // Then append the div to the answers section.
+  newRow.appendChild(newElement);
+  answersDiv.appendChild(newRow);
+
+  // Display the saved scores.
+  var totalScores = parseInt(savedScores.length);
   
-  // // Append the input element as a child node to the initials div.
-  // initialsDiv.appendChild(newElement);
+  // Display the scores and initials for 
+  // the high scores page.
+  for (var i = 0; i < totalScores; i++) {
+    // Create a new row.
+    newRow = document.createElement("div");
+    newAtt = document.createAttribute("class");
+    newAtt.value = "row";
+    newRow.setAttributeNode(newAtt);
+    newAtt = document.createAttribute("style");
+    rowBgColor = (rowBgColor === "lightgray" ? "white" : "lightgray");
+    newAtt.value = "background-color:" + rowBgColor;
+    newRow.setAttributeNode(newAtt);
 
-  // // BUTTON - Add a button element to save the initials entered
-  // newElement = document.createElement("button");
-  // // Create an Id attribute for the button.
-  // newAtt = document.createAttribute("id");
-  // newAtt.value = "submit-btn";
-  // // Add the attribute to the button node.
-  // newElement.setAttributeNode(newAtt);
-  // // Add text to button
-  // newElement.innerHTML = "Submit";
+    // Create a new div element and a class attribute for it.
+    // Append it to the new row.
+    // newElement = document.createElement("div");
+    // newAtt = document.createAttribute("class");
+    // newAtt.value = "col-lg-2";
+    // newElement.setAttributeNode(newAtt);
+    // newRow.appendChild(newElement);
 
-  // // Append the button element as a child node to the initials div.
-  // initialsDiv.appendChild(newElement);
+    // Create a new div for the high score order column.
+    // Set the value to display and append it to the new row.
+    newElement = document.createElement("div");
+    newAtt = document.createAttribute("class");
+    newAtt.value = "col-lg-2";
+    newElement.setAttributeNode(newAtt);
+    newElement.textContent = (i + 1).toString();
+    newRow.appendChild(newElement);
 
-  // // Get the Submit Score button object.
-  // btnSubmitScore = document.getElementById("submit-btn");
-  // // Add an event listener if it is clicked. If it is
-  // // clicked then run the submitScore function.
-  // btnSubmitScore.addEventListener("click", submitScore);
+    // Create a new div for the Score column.
+    // Set the value from the saved array and 
+    // append it to the new row.
+    newElement = document.createElement("div");
+    newAtt = document.createAttribute("class");
+    newAtt.value = "col-lg-3";
+    newElement.setAttributeNode(newAtt);
+    newElement.innerHTML = savedScores[i].score;
+    newRow.appendChild(newElement);
+
+    // Create a new div for the Initials column.
+    // Set the value from the saved array and
+    // append it to the new row.
+    newElement = document.createElement("div");
+    newAtt = document.createAttribute("class");
+    newAtt.value = "col-lg-3";
+    newElement.setAttributeNode(newAtt);
+    newElement.innerHTML = savedScores[i].initials;
+
+    // Append the child node to the row div.
+    // Then append the div to the answers section.
+    newRow.appendChild(newElement);
+    answersDiv.appendChild(newRow);
+  };
+
+  // BUTTON - Add a button element to clear the saved 
+  // scores.
+  newRow = document.createElement("div");
+  newAtt = document.createAttribute("class");
+  newAtt.value = "row";
+  newRow.setAttributeNode(newAtt);
+
+
+  newElement = document.createElement("div");
+  newAtt = document.createAttribute("class");
+  newAtt.value = "col-lg-12 button-row";
+  newElement.setAttributeNode(newAtt);
+  
+  var newBtn = document.createElement("button");
+
+  // Create an Id attribute for the button, set its value,
+  // and add the attribute to the button node.
+  newAtt = document.createAttribute("id");
+  newAtt.value = "clear-scores-btn";
+  newBtn.setAttributeNode(newAtt);
+
+  // Add text to button.
+  newBtn.innerHTML = "Clear Scores";
+
+  // Append the button element as a child node to the row div.
+  // Append the row to the answers div.
+  newElement.appendChild(newBtn)
+  newRow.appendChild(newElement);
+  answersDiv.appendChild(newRow);
+
+  // Get the Clear Scores button object.
+  btnClearScores = document.getElementById("clear-scores-btn");
+
+  // Add an event listener if it is clicked. If it is
+  // clicked then run the clearScore function.
+  btnClearScores.addEventListener("click", clearScores);
+
+}
+function clearScores() {
+  // If the Clear Scores button was clicked, clear the savedScores item
+  // in local storage.
+  console.log("hello");
+  localStorage.removeItem("savedScores");
+  displayHighScoresSection();
 }
 
 function startQuiz() {
@@ -380,6 +476,10 @@ function startQuiz() {
 
   // Get any saved scores from local storage.
   savedScores = JSON.parse(localStorage.getItem("savedScores"));
+
+  if (savedScores != null) {
+    saveData = true;
+  }
 
   // Remove the Start Quiz button.
   btnStartQuiz.remove();
