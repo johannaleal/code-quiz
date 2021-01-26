@@ -72,7 +72,7 @@ function getCorrectAnswer(answerNum) {
     return questionsAndAnswers[answerNum].correctAnswer;
 }
 
-// This function will display the question and related answers using the the question
+// This function will display the question and related answers using the question
 // number passed in as a parameter.
 function displayQandA(questionNumber) {
     // Get DOM elements to process question and answers.
@@ -84,7 +84,7 @@ function displayQandA(questionNumber) {
     // Display each answer for the question in the answers div.
     for (var i = 1; i <= 4 ; i++) {
         // Only create the HTML elements if this is the first question.
-        // Otherwise just replace the inner HTML.
+        // Else replace the inner HTML.
         if (questionNumber === 0) {
           var newElement = document.createElement("div");
 
@@ -115,6 +115,7 @@ answersDiv.addEventListener("click", function(event) {
   var element = event.target;
   var userAnswer;
 
+  // If a div element was clicked, that means the user clicked on an answer.
   if (element.matches("div")) {
     // Get the answer number that the user clicked.
     userAnswer = Number(element.getAttribute("data-number"));
@@ -133,9 +134,11 @@ answersDiv.addEventListener("click", function(event) {
       timerElement.innerHTML = timeLeft;
     }
 
-    // Display the next question if there are any more questions left.
     currentQuestion++;
 
+    // Display the next question if there are any more questions left.
+    // Else get the score from the amount of time left on the timer and
+    // display the final score page.
     if ( currentQuestion < 4 ) {
       displayQandA(currentQuestion);
     }
@@ -150,7 +153,6 @@ answersDiv.addEventListener("click", function(event) {
 // once the quiz is over.
 function displayFinalScoreSection() {
     // Initialize variables.
-    // var childDiv;
     var newElement;
     var initialsDiv;
     var newAtt;
@@ -167,7 +169,7 @@ function displayFinalScoreSection() {
     // user's final score.
     newElement = document.createElement("div");
 
-    // Set the class attribute, the Id, the inner HTML of the div.
+    // Set the class, Id, and the inner HTML of the div.
     newElement.setAttribute("class", "col-lg-12");
     newElement.setAttribute("id", "final-score");
     newElement.innerHTML = "Your final score is: " + currentScore.toString();
@@ -176,7 +178,7 @@ function displayFinalScoreSection() {
     answersDiv.appendChild(newElement);
 
     // ENTER INITIALS - Add a new div to prompt for their initials.
-    // Set the class attribute, Id, and inner HTML of the div.
+    // Set the class, Id, and inner HTML of the div.
     initialsDiv = document.createElement("div");
     initialsDiv.setAttribute("class", "col-lg-12");
     initialsDiv.setAttribute("id", "enter-initials");
@@ -195,7 +197,7 @@ function displayFinalScoreSection() {
     initialsDiv.appendChild(newElement);
 
     // BUTTON - Add a button element to save the initials entered.
-    // Set the Id of the button and text.
+    // Set the Id and text of the button.
     newElement = document.createElement("button");
     newElement.setAttribute("id", "submit-btn");
     newElement.innerHTML = "Submit";
@@ -211,6 +213,8 @@ function displayFinalScoreSection() {
     btnSubmitScore.addEventListener("click", submitScore);
 }
 
+// This function will stop the timer and clear certain HTML content
+// under certain conditions.
 function clearContent() {
 
   var childDiv;
@@ -235,7 +239,7 @@ function clearContent() {
 }
 
 // This will save the score entered in the input box after the
-//  Submit button is clicked on the final score page.
+// Submit button is clicked on the final score page.
 function submitScore() {
   // Get the value entered in the initials input box.
   var userInits = document.getElementById("user-initials").value;
@@ -272,7 +276,7 @@ function displayHighScoresSection(requestor) {
   var rowBgColor = "lightgray";
   var i = 1;
 
-   // Clear the message div and time i nheader.
+   // Clear the message div and time on the header.
    messageDiv.innerHTML = "";
    timerElement.innerHTML = "";
 
@@ -280,7 +284,7 @@ function displayHighScoresSection(requestor) {
   savedScores = JSON.parse(localStorage.getItem("savedScores"));
 
   // If this function was called from the View High Scores
-  // link stop the timer and clear certain contant that 
+  // link stop the timer and clear certain content that 
   // may exist from other functions.
   if (requestor === "link") {
     clearContent();
@@ -291,6 +295,8 @@ function displayHighScoresSection(requestor) {
       deleteElement.remove();
     };
 
+    // Remove the high-scores-section in case it exists on the page.
+    // Otherwise it will display multiple times.
     deleteElement = document.getElementById("high-scores-section");
     if (deleteElement) {
       deleteElement.remove();
@@ -401,9 +407,8 @@ function displayHighScoresSection(requestor) {
     highScoresSection.appendChild(newRow);
   };
 
-  // BUTTONS - Add a row wher the Clear Scores button 
+  // BUTTONS - Add a row where the Clear Scores button 
   // and Go Back buttons will display.
-  // scores.
   newRow = document.createElement("div");
   newRow.setAttribute("class", "row");
 
@@ -436,14 +441,14 @@ function displayHighScoresSection(requestor) {
   btnClearScores = document.getElementById("clear-scores-btn");
 
   // Add an event listener if it is clicked. If it is
-  // clicked then run the clearScore function.
+  // clicked then call the clearScore function.
   btnClearScores.addEventListener("click", clearScores);
 
   // Get the Go Back button object.
   btnGoBack = document.getElementById("go-back-btn");
 
   // Add an event listener if it is clicked. If it is
-  // clicked then run the Start Quiz function.
+  // clicked then call the Start Quiz function.
   btnGoBack.addEventListener("click", reLoad);
 
 }
@@ -455,19 +460,24 @@ function clearScores() {
   // Clear the global saved scores arry.
   savedScores = [];
 
+  // Delete the high scores section.
   var deleteElement = document.getElementById("high-scores-section");
   if (deleteElement != null) {
     deleteElement.remove();
   };
 
+  // Redisplay the high scores page which will now have
+  // no scores since they've been cleared.
   displayHighScoresSection();
 }
 
+// Function to reload the page.
 function reLoad() {
   // To restart the quiz, reload the page.
   location.reload();
 }
 
+// Function that starts the quiz once the Start Quiz button is clicked.
 function startQuiz() {
   // Initialize the quiz questions and answers object array.
   initializeQuestionAndAnswerArray();
@@ -475,6 +485,7 @@ function startQuiz() {
   // Get any saved scores from local storage.
   savedScores = JSON.parse(localStorage.getItem("savedScores"));
 
+  // Det this boolean to true if there is saved data.
   if (savedScores != null) {
     saveData = true;
   }
