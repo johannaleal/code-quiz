@@ -94,12 +94,8 @@ function displayQandA(questionNumber) {
           // var newAtt = document.createAttribute("class");
           // newAtt.value = "col-lg-12";
           newElement.setAttribute("class", "col-lg-12");
-          newAtt = document.createAttribute("id");
-          newAtt.value = "answer" + i.toString();
-          newElement.setAttributeNode(newAtt);
-          newAtt = document.createAttribute("data-number");
-          newAtt.value = i.toString();
-          newElement.setAttributeNode(newAtt);
+          newElement.setAttribute("id", "answer" + i.toString());
+          newElement.setAttribute("data-number", i.toString());
         }
         else {
           var newElement = document.getElementById("answer" + i);
@@ -430,13 +426,14 @@ function displayHighScoresSection() {
     highScoresSection.appendChild(newRow);
   };
 
-  // BUTTON - Add a button element to clear the saved 
+  // BUTTONS - Add a row wher the Clear Scores button 
+  // and Go Back buttons will display.
   // scores.
   newRow = document.createElement("div");
   newRow.setAttribute("class", "row");
 
   newElement = document.createElement("div");
-  newElement.setAttribute("class", "col-lg-12");
+  newElement.setAttribute("class", "col-lg-12 button-row");
   
   // Create and set attributes for the Clear Scores button.
   var newBtn = document.createElement("button");
@@ -472,7 +469,7 @@ function displayHighScoresSection() {
 
   // Add an event listener if it is clicked. If it is
   // clicked then run the Start Quiz function.
-  btnGoBack.addEventListener("click", startQuiz);
+  btnGoBack.addEventListener("click", reLoad);
 
 }
 function clearScores() {
@@ -489,6 +486,11 @@ function clearScores() {
   };
 
   displayHighScoresSection();
+}
+
+function reLoad() {
+  // To restart the quiz, reload the page.
+  location.reload();
 }
 
 function startQuiz() {
