@@ -45,7 +45,8 @@ header h3 {
 /* Styling for the buttons */
 #start-quiz-btn, 
 #submit-btn,
-#clear-scores-btn
+#clear-scores-btn,
+#go-back-btn
 {
     width: 150px;
     text-align: center;
@@ -68,19 +69,19 @@ header h3 {
     justify-content: center;
 }
 
-#button-row {
+.button-row {
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 120px;
-    height: 45px;
-    padding: 10px;
+    justify-content: center;
+    padding: 10px, 10px;
 }
 
-#clear-scores-btn {
+#clear-scores-btn,
+#go-back-btn 
+{
     width: 120px;
-    height: 45px;
-    padding: 10px;
+    height: 40px;
+    padding: 5px;
 }
 
 #message {

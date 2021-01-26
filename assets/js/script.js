@@ -17,6 +17,7 @@ var quizEnded = false;          // Flag telling us quiz ended.
 var timerInterval;              // Timer interval
 var btnSubmitScore;             // Submit score button
 var btnClearScores;             // Clear scores button
+var btnGoBack;                  // Go Back button to restart the quiz
 var savedScores = [];           // Array to save high score objects
 
 // This function initializes a global array of objects that contains each question, 
@@ -90,15 +91,11 @@ function displayQandA(questionNumber) {
           var newElement = document.createElement("div");
 
           // Set the attributes for each answer div.
-          var newAtt = document.createAttribute("class");
-          newAtt.value = "col-lg-12";
-          newElement.setAttributeNode(newAtt);
-          newAtt = document.createAttribute("id");
-          newAtt.value = "answer" + i.toString();
-          newElement.setAttributeNode(newAtt);
-          newAtt = document.createAttribute("data-number");
-          newAtt.value = i.toString();
-          newElement.setAttributeNode(newAtt);
+          // var newAtt = document.createAttribute("class");
+          // newAtt.value = "col-lg-12";
+          newElement.setAttribute("class", "col-lg-12");
+          newElement.setAttribute("id", "answer" + i.toString());
+          newElement.setAttribute("data-number", i.toString());
         }
         else {
           var newElement = document.getElementById("answer" + i);
@@ -175,7 +172,6 @@ function displayFinalScoreSection() {
     // Remove all the answers from the page.
     for (i = 1; i <= 4; i++) {
         childDiv = document.getElementById("answer" + i.toString());
-        console.log("i is " + i);
         answersDiv.removeChild(childDiv);
     }
 
@@ -320,7 +316,6 @@ function displayHighScoresSection() {
   // Initialize variables.
   var subSectionDiv;
   var newElement;
-  var newAtt;
   var rowBgColor = "lightgray";
   var i = 1;
 
@@ -347,37 +342,27 @@ function displayHighScoresSection() {
    // Create a new section for the high scores list, 
   // set an Id for it, and append it to the answers div.
   var highScoresSection = document.createElement("section");
-  newAtt = document.createAttribute("id");
-  newAtt.value = "high-scores-section";
-  highScoresSection.setAttributeNode(newAtt);
+  highScoresSection.setAttribute("id", "high-scores-section");
   answersDiv.appendChild(highScoresSection);
 
   // Create a new row div.
   var newRow = document.createElement("div");
-  newAtt = document.createAttribute("class");
-  newAtt.value = "row";
-  newRow.setAttributeNode(newAtt);
-  newAtt = document.createAttribute("style");
-  newAtt.value = "background-color: lightskyblue;";
-  newRow.setAttributeNode(newAtt);
+  newRow.setAttribute("class", "row");
+  newRow.setAttribute("style", "background-color: lightskyblue");
 
   // Append the child node to the answers div.
   highScoresSection.appendChild(newRow);
 
   // Create a new div for the high score place column.
   newElement = document.createElement("div");
-  newAtt = document.createAttribute("class");
-  newAtt.value = "col-lg-2";
-  newElement.setAttributeNode(newAtt);
+  newElement.setAttribute("class", "col-lg-2");
 
   // Append the child node to the answers div.
   newRow.appendChild(newElement);
 
   // Create a new div for the Score column
   newElement = document.createElement("div");
-  newAtt = document.createAttribute("class");
-  newAtt.value = "col-lg-3";
-  newElement.setAttributeNode(newAtt);
+  newElement.setAttribute("class", "col-lg-3");
   newElement.innerHTML = "Score";
 
   // Append the child node to the answers div.
@@ -385,9 +370,7 @@ function displayHighScoresSection() {
 
   // Create a new div for the Initials column
   newElement = document.createElement("div");
-  newAtt = document.createAttribute("class");
-  newAtt.value = "col-lg-3";
-  newElement.setAttributeNode(newAtt);
+  newElement.setAttribute("class", "col-lg-3");
   newElement.innerHTML = "Initials";
 
   // Append the child node to the row div.
@@ -411,20 +394,14 @@ function displayHighScoresSection() {
   for (var i = 0; i < totalScores; i++) {
     // Create a new row.
     newRow = document.createElement("div");
-    newAtt = document.createAttribute("class");
-    newAtt.value = "row";
-    newRow.setAttributeNode(newAtt);
-    newAtt = document.createAttribute("style");
+    newRow.setAttribute("class", "row");
     rowBgColor = (rowBgColor === "lightgray" ? "white" : "lightgray");
-    newAtt.value = "background-color:" + rowBgColor;
-    newRow.setAttributeNode(newAtt);
+    newRow.setAttribute("style", "background-color:" + rowBgColor);
 
     // Create a new div for the high score order column.
     // Set the value to display and append it to the new row.
     newElement = document.createElement("div");
-    newAtt = document.createAttribute("class");
-    newAtt.value = "col-lg-2";
-    newElement.setAttributeNode(newAtt);
+    newElement.setAttribute("class", "col-lg-2");
     newElement.textContent = (i + 1).toString();
     newRow.appendChild(newElement);
 
@@ -432,9 +409,7 @@ function displayHighScoresSection() {
     // Set the value from the saved array and 
     // append it to the new row.
     newElement = document.createElement("div");
-    newAtt = document.createAttribute("class");
-    newAtt.value = "col-lg-3";
-    newElement.setAttributeNode(newAtt);
+    newElement.setAttribute("class", "col-lg-3");
     newElement.innerHTML = savedScores[i].score;
     newRow.appendChild(newElement);
 
@@ -442,9 +417,7 @@ function displayHighScoresSection() {
     // Set the value from the saved array and
     // append it to the new row.
     newElement = document.createElement("div");
-    newAtt = document.createAttribute("class");
-    newAtt.value = "col-lg-3";
-    newElement.setAttributeNode(newAtt);
+    newElement.setAttribute("class", "col-lg-3");
     newElement.innerHTML = savedScores[i].initials;
 
     // Append the child node to the row div.
@@ -453,29 +426,29 @@ function displayHighScoresSection() {
     highScoresSection.appendChild(newRow);
   };
 
-  // BUTTON - Add a button element to clear the saved 
+  // BUTTONS - Add a row wher the Clear Scores button 
+  // and Go Back buttons will display.
   // scores.
   newRow = document.createElement("div");
-  newAtt = document.createAttribute("class");
-  newAtt.value = "row";
-  newRow.setAttributeNode(newAtt);
-
+  newRow.setAttribute("class", "row");
 
   newElement = document.createElement("div");
-  newAtt = document.createAttribute("class");
-  newAtt.value = "col-lg-12 button-row";
-  newElement.setAttributeNode(newAtt);
+  newElement.setAttribute("class", "col-lg-12 button-row");
   
+  // Create and set attributes for the Clear Scores button.
   var newBtn = document.createElement("button");
-
-  // Create an Id attribute for the button, set its value,
-  // and add the attribute to the button node.
-  newAtt = document.createAttribute("id");
-  newAtt.value = "clear-scores-btn";
-  newBtn.setAttributeNode(newAtt);
-
-  // Add text to button.
+  newBtn.setAttribute("id", "clear-scores-btn");
   newBtn.innerHTML = "Clear Scores";
+
+  // Append the button element as a child node to the row div.
+  newElement.appendChild(newBtn)
+  newRow.appendChild(newElement);
+  highScoresSection.appendChild(newRow);
+
+  // Create and set attributes for the Go Back button.
+  newBtn = document.createElement("button");
+  newBtn.setAttribute("id", "go-back-btn");
+  newBtn.innerHTML = "Go Back";
 
   // Append the button element as a child node to the row div.
   // Append the row to the answers div.
@@ -490,6 +463,13 @@ function displayHighScoresSection() {
   // Add an event listener if it is clicked. If it is
   // clicked then run the clearScore function.
   btnClearScores.addEventListener("click", clearScores);
+
+  // Get the Go Back button object.
+  btnGoBack = document.getElementById("go-back-btn");
+
+  // Add an event listener if it is clicked. If it is
+  // clicked then run the Start Quiz function.
+  btnGoBack.addEventListener("click", reLoad);
 
 }
 function clearScores() {
@@ -508,6 +488,11 @@ function clearScores() {
   displayHighScoresSection();
 }
 
+function reLoad() {
+  // To restart the quiz, reload the page.
+  location.reload();
+}
+
 function startQuiz() {
   // Initialize the quiz questions and answers object array.
   initializeQuestionAndAnswerArray();
@@ -523,6 +508,7 @@ function startQuiz() {
   btnStartQuiz.remove();
 
   // Display the first question and related answers.
+  currentQuestion = 0;
   displayQandA(currentQuestion);
 
   // Set timer interval.
