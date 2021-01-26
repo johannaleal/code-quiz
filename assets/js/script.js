@@ -150,27 +150,14 @@ answersDiv.addEventListener("click", function(event) {
 // once the quiz is over.
 function displayFinalScoreSection() {
     // Initialize variables.
-    var childDiv;
+    // var childDiv;
     var newElement;
     var initialsDiv;
     var newAtt;
     var i = 1;
 
-    // Stop the timer.
-    clearInterval(timerInterval);
-
-    // Clear the question section in case you are coming from 
-    // the View High Scores link.
-    questionSection.innerHTML = "";
-
-    // Clear the message div.
-    messageDiv.innerHTML = "";
-
-    // Remove all the answers from the page.
-    for (i = 1; i <= 4; i++) {
-        childDiv = document.getElementById("answer" + i.toString());
-        answersDiv.removeChild(childDiv);
-    }
+    // Clear certain content from previous functions.
+    clearContent();
 
     // ALL DONE! - Display "All done!".
     var subHdrElement = document.getElementById("sub-section-header");
@@ -224,6 +211,29 @@ function displayFinalScoreSection() {
     btnSubmitScore.addEventListener("click", submitScore);
 }
 
+function clearContent() {
+
+  var childDiv;
+
+  // Stop the timer.
+  clearInterval(timerInterval);
+
+  // Clear the question section in case you are coming from 
+  // the View High Scores link.
+  questionSection.innerHTML = "";
+
+  // Remove all the answers from the page.
+  if (answersDiv) {
+    for (i = 1; i <= 4; i++) {
+        childDiv = document.getElementById("answer" + i.toString());
+        if (childDiv) {
+          answersDiv.removeChild(childDiv);
+        };
+    };
+  };
+
+}
+
 // This will save the score entered in the input box after the
 //  Submit button is clicked on the final score page.
 function submitScore() {
@@ -255,19 +265,37 @@ function submitScore() {
 
 // This function will display the high scores page where user initials
 // and scores will be displayed by descending score order.
-function displayHighScoresSection() {
+function displayHighScoresSection(requestor) {
   // Initialize variables.
   var subSectionDiv;
   var newElement;
   var rowBgColor = "lightgray";
   var i = 1;
 
+   // Clear the message div and time i nheader.
+   messageDiv.innerHTML = "";
+   timerElement.innerHTML = "";
+
   // Get any saved scores from local storage.
   savedScores = JSON.parse(localStorage.getItem("savedScores"));
 
-  // Replace the question text with a message telling
-    // the user that they are done.
-    questionSection.innerHTML = "";
+  // If this function was called from the View High Scores
+  // link stop the timer and clear certain contant that 
+  // may exist from other functions.
+  if (requestor === "link") {
+    clearContent();
+
+    // Remove the Start Quiz button if it exists on the page.
+    deleteElement = document.getElementById("start-quiz-btn");
+    if (deleteElement) {
+      deleteElement.remove();
+    };
+
+    deleteElement = document.getElementById("high-scores-section");
+    if (deleteElement) {
+      deleteElement.remove();
+    };
+  };
 
   // Remove final score div and the enter initials div.
   var deleteElement = document.getElementById("final-score");
@@ -276,12 +304,6 @@ function displayHighScoresSection() {
   };
 
   deleteElement = document.getElementById("enter-initials");
-  if (deleteElement) {
-    deleteElement.remove();
-  };
-
-  // Remove the Start Quiz button if it exists on the page.
-  deleteElement = document.getElementById("start-quiz-btn");
   if (deleteElement) {
     deleteElement.remove();
   };
